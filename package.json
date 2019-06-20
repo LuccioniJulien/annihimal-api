@@ -1,0 +1,28 @@
+{
+  "name": "annihimal-api",
+  "version": "1.0.0",
+  "description": "backend for annihimal application, REST.",
+  "main": "server.js",
+  "scripts": {
+    "start": "npx nodemon server.js --exec babel-node"
+  },
+  "keywords": [
+    "rest",
+    "express",
+    "node"
+  ],
+  "author": "Julien luccioni",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^2.4.2",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1",
+    "pg": "^7.11.0",
+    "sequelize": "^5.8.10"
+  }
+}

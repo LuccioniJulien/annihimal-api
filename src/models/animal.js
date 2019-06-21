@@ -4,7 +4,8 @@ import {
   Column,
   JoinTable,
   ManyToMany,
-  ManyToOne
+  ManyToOne,
+  BaseEntity
 } from "typeorm";
 import Habitat from "./habitat";
 import Threat from "./threat";
@@ -13,7 +14,8 @@ import Class from "./class";
 import Diet from "./diet";
 import Lifestyle from "./lifestyle";
 import Group_Behavior from "./group_Behavior";
-import User from "./user"
+import User from "./user";
+import "reflect-metadata";
 @Entity()
 export class Animal {
   @PrimaryGeneratedColumn()

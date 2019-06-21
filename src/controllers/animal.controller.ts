@@ -7,8 +7,8 @@ export async function get(
   response: express.Response
 ): Promise<void> {
   try {
-    const animals: Array<Animal> = await getAnimals();
-    response.status(200).send(JSON.stringify(animals));
+    // const animals: Array<Animal> = await getAnimals();
+    response.status(200).send(JSON.stringify([]));
   } catch (error) {
     response.status(500);
   }

@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as bodyParser from "body-Parser";
+import * as bodyParser from "body-parser";
 
 import animalRouter from "./routes/animal.route";
 

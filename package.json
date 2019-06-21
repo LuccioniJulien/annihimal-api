@@ -1,36 +1,19 @@
 {
-  "name": "annihimal-api",
-  "version": "1.0.0",
-  "description": "backend for annihimal application, REST.",
-  "main": "server.js",
-  "scripts": {
-    "start": "npx nodemon server.js --exec babel-node",
-    "build": "babel src --out-dir dist"
-  },
-  "keywords": [
-    "rest",
-    "express",
-    "node"
-  ],
-  "author": "Julien luccioni",
-  "license": "ISC",
-  "dependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/node": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-proposal-decorators": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "@types/node": "^12.0.8",
-    "babel-plugin-module-resolver": "^3.2.0",
-    "body-parser": "^1.19.0",
-    "chalk": "^2.4.2",
-    "dotenv": "^8.0.0",
-    "express": "^4.17.1",
-    "nodemon": "^1.19.1",
-    "pg": "^7.11.0",
-    "reflect-metadata": "^0.1.13",
-    "sequelize": "^5.8.10",
-    "typeorm": "^0.2.18"
-  }
+   "name": "post",
+   "version": "0.0.1",
+   "description": "Awesome project developed with TypeORM. REST api for annihimalAPp",
+   "devDependencies": {
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "express": "^4.17.1",
+      "pg": "^7.3.0",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.18"
+   },
+   "scripts": {
+      "start": "ts-node src/index.ts"
+   }
 }

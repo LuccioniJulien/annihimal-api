@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,16 +6,17 @@ import {
   ManyToMany,
   JoinTable
 } from "typeorm";
+import { Animal } from "./animal";
 
-@Entity()
+@Entity({ name: "Prey" })
 export class Prey {
   @PrimaryGeneratedColumn()
-  id = undefined;
+  id: number;
 
   @Column("varchar")
-  name = "";
+  name: string;
 
   @ManyToMany(type => Animal, animal => animal.preys)
-  @JoinTable()
-  animals = undefined;
+  @JoinTable({ name: "Animal_has_preys" })
+  animals: Animal[];
 }

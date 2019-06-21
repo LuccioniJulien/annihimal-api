@@ -4,7 +4,7 @@
    "port": 5432,
    "username": "",
    "password": "",
-   "database": "anihimal",
+   "database": "annihimal",
    "logging": true,
    "entities": [
       "src/models/**/*.ts"

@@ -26,37 +26,37 @@ export class Animal {
   @Column("varchar")
   name: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   scientific_name: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   color: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   skin_type: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   status: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   img: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   size: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   weight: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   gestation: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   litter_size: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   lifespan: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   fun_fact: string;
 
   @ManyToMany(type => Habitat, habitat => habitat.animals)

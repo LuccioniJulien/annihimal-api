@@ -4,7 +4,7 @@ import server from "./expess";
 
 const main = async () => {
   try {
-    // const connection = await createConnection();
+    const connection = await createConnection();
     // await connection.dropDatabase();
     // await connection.synchronize(true);
 

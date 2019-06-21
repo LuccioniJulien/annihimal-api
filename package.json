@@ -1,20 +1,18 @@
 {
-   "name": "post",
-   "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM. REST api for annihimalAPp",
-   "devDependencies": {
-      "@types/express": "^4.17.0",
-      "@types/node": "^8.0.29",
-      "typescript": "3.3.3333"
-   },
-   "dependencies": {
-      "body-parser": "^1.19.0",
-      "express": "^4.17.1",
-      "pg": "^7.3.0",
-      "reflect-metadata": "^0.1.10",
-      "typeorm": "0.2.18"
-   },
-   "scripts": {
-      "start": "ts-node src/index.ts"
-   }
+  "name": "post",
+  "version": "0.0.1",
+  "description": "Awesome project developed with TypeORM. REST api for annihimalAPp",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "@types/node": "^8.0.29",
+    "typescript": "3.3.3333",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pg": "^7.3.0",
+    "reflect-metadata": "^0.1.10",
+    "typeorm": "0.2.18"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  }
 }

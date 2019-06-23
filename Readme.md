@@ -11,3 +11,7 @@
 
 1. `npm i` pour installer les dépendances.
 2. `npm start` pour démarrer l'application.
+
+## Variables .env
+
+rien.

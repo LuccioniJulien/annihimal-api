@@ -13,8 +13,9 @@ const rootDir = __dirname;
   rootDir,
   acceptMimes: ["application/json"],
   mount: {
-    "/api": "${rootDir}/controllers/*.controller.ts",
-  }
+    "/api": "${rootDir}/controllers/*.controller.ts"
+  },
+  port: process.env.PORT || 4242
 })
 export class Server extends ServerLoader {
   /**

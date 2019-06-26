@@ -1,9 +1,9 @@
-import { getConnection } from "typeorm";
 import { Animal } from "../models/animal";
+import { Base } from "./base.repository";
+import IAnimalRepo from "../interfaces/IAnimalRepo";
 
-export async function getAnimals(): Promise<Array<Animal>> {
-  const animals: Array<Animal> = await getConnection()
-    .getRepository(Animal)
-    .find();
-  return animals;
+export default class AnimalRepo extends Base<Animal> implements IAnimalRepo {
+  constructor() {
+    super(Animal);
+  }
 }

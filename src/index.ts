@@ -1,23 +1,17 @@
 import "reflect-metadata";
+import { Server } from "./server";
 import { createConnection } from "typeorm";
-import server from "./expess";
 
-const main = async () => {
+async function main(): Promise<void> {
   try {
-    // const connection = await createConnection();
-    // await connection.dropDatabase();
-    // await connection.synchronize(true);
-
-    const port: number = parseInt(process.env.PORT) || 4242;
-    const isRunning: boolean = await server(port);
-    if (isRunning) {
-      console.log(`Server now running on port ${port}`);
-    } else {
-      throw "Something went wrong.....";
-    }
+    // On se connecte à la db
+    await createConnection();
+    // On lance le serveur
+    await new Server().start();
+    console.log("Server started");
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
-};
+}
 
 main();

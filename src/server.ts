@@ -3,6 +3,7 @@ import {
   ServerSettings,
   GlobalAcceptMimesMiddleware
 } from "@tsed/common";
+import "@tsed/swagger";
 import * as cookieParser from "cookie-parser";
 import * as bodyParser from "body-parser";
 import * as compress from "compression";
@@ -15,7 +16,12 @@ const rootDir = __dirname;
   mount: {
     "/api": "${rootDir}/controllers/*.controller.ts"
   },
-  port: process.env.PORT || 4242
+  port: process.env.PORT || 4242,
+  swagger: [
+    {
+      path: "/api-docs"
+    }
+  ]
 })
 export class Server extends ServerLoader {
   /**

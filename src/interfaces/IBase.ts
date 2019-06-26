@@ -1,3 +1,4 @@
 export default interface IBase<T> {
-  get(): Promise<Array<T>>;
+  getAll(): Promise<Array<T>>;
+  get(id:number): Promise<T>;
 }

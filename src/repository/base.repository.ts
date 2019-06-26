@@ -8,8 +8,11 @@ export abstract class Base<T> implements IBase<T> {
     this.entities = getConnection().getRepository(modelClass);
   }
 
-  async get(): Promise<Array<T>> {
-    const animals: Array<T> = await this.entities.find();
-    return animals;
+  async getAll(): Promise<Array<T>> {
+    return this.entities.find();
+  }
+
+  async get(id: number): Promise<T> {
+    return this.entities.findOne(id);
   }
 }

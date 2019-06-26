@@ -1,5 +1,6 @@
 import { Animal } from "../models/animal";
 
 export default interface IAnimalRepo {
-  get(): Promise<Array<Animal>>;
+  getAll(): Promise<Array<Animal>>;
+  get(id:number): Promise<Animal>;
 }

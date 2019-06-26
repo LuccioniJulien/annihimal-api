@@ -15,8 +15,14 @@ export class AnimalsController {
   @Get()
   @Status(200)
   async getAll(): Promise<Array<Animal>> {
-    const animals: Array<Animal> = await this.repo.animals.get();
-    return animals;
+    try {
+      const animals: Array<Animal> = await this.repo.animals.get();
+      return animals;
+    } catch (error) {
+      console.log(error)
+      return [];
+    }
+
   }
 
   // @Get()

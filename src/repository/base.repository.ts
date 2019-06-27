@@ -7,11 +7,15 @@ export abstract class Base<T> {
     this.entities = getConnection().getRepository(modelClass);
   }
 
-  public async getAll(): Promise<Array<T>> {
-    return this.entities.find();
+  public getAll(skip: number = 0, take: number = 10): Promise<Array<T>> {
+    return this.entities
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .execute();
   }
 
-  public async get(id: number): Promise<T> {
+  public get(id: number): Promise<T> {
     return this.entities.findOne(id);
   }
 }

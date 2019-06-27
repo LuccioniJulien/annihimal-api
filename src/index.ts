@@ -24,23 +24,41 @@ async function main(): Promise<void> {
 
   try {
     // On se connecte à la db
-    // const connection = await createConnection();
-    // await connection.dropDatabase();
-    // await connection.synchronize(true);
+    const connection = await createConnection();
+    await connection.dropDatabase();
+    await connection.synchronize(true);
 
     const animals = jsonReader(path.join(process.cwd(), "data.json"));
     console.log(typeof animals);
 
+    // return animals list cleanup
     const cleanAnimal = animals.map( animal => {
-      const { name, colour: color} = animal
+      const { name, scientific_name: scientificName, colour: color, skin_type: skinType, status, img, size, weight, gestation, litter_size: litterSize, lifespan: lifespan, fun_fact: funFact, habitat, class: category, prey, diet, group_behaviour: groupBehaviour, predator, biggest_threat: biggestThreat} = animal
+
       return {
         name,
-        color
+        scientificName,
+        color,
+        skinType,
+        status,
+        img,
+        size,
+        weight,
+        gestation,
+        litterSize,
+        lifespan,
+        funFact,
+        habitat,
+        category,
+        prey,
+        diet,
+        groupBehaviour,
+        predator,
+        biggestThreat
       }
     })
     
     console.log("😃", cleanAnimal);
-    
 
     // On lance le serveur
     // await new Server().start();

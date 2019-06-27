@@ -7,12 +7,12 @@ import {
   PathParams
 } from "@tsed/common";
 import { Animal } from "../models/animal";
-import Repository from "../repository/repository";
+import Repository from "../services/repository.service";
 import { Description, Returns } from "@tsed/swagger";
 import ErrorRequest from "../errors/ErrorRequest";
 
 @Scope(ProviderScope.INSTANCE)
-@Controller("/animal")
+@Controller("/animals")
 export class AnimalsController {
   private _repo: Repository;
 
@@ -35,6 +35,7 @@ export class AnimalsController {
   @Returns(404, { description: "Not found" })
   @Returns(400, { description: "Bad Request" })
   @Returns(200, { description: "Found" })
+  @Description("Get one animal by id")
   async get(@PathParams("id") id: number): Promise<object> {
     const animal: Animal = await this._repo.animals.get(id);
     if (!animal) throw new ErrorRequest("Not found", 404);
@@ -43,9 +44,9 @@ export class AnimalsController {
 
   @Get("/details/:id")
   @Status(200)
-  @Returns(404, { description: "Not found" })
   @Returns(400, { description: "Bad Request" })
   @Returns(200, { description: "Found" })
+  @Description("Get one animal and his details by id")
   async getDetails(@PathParams("id") id: number): Promise<object> {
     const animal = await this._repo.animals.getDetailsOfAnimal(id);
     if (!animal) throw new ErrorRequest("Not found", 404);

@@ -1,4 +1,4 @@
-import { getConnection, Repository } from "typeorm";
+import { getConnection, Repository, InsertResult } from "typeorm";
 
 export abstract class Base<T> {
   entities: Repository<T>;
@@ -17,5 +17,9 @@ export abstract class Base<T> {
 
   public get(id: number): Promise<T> {
     return this.entities.findOne(id);
+  }
+
+  public async insert(value: T): Promise<InsertResult> {
+    return this.entities.insert(value);
   }
 }

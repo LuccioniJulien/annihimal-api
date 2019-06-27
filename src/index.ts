@@ -2,6 +2,8 @@ import "reflect-metadata";
 import { Server } from "./server";
 import { createConnection } from "typeorm";
 
+require('dotenv').config()
+
 async function main(): Promise<void> {
   try {
     // On se connecte à la db

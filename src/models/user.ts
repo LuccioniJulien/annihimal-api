@@ -7,20 +7,32 @@ import {
   ManyToMany
 } from "typeorm";
 import { Animal } from "./animal";
+import { Property, Required } from "@tsed/common";
+import { IsEmail, Equals } from "class-validator";
 
-@Entity({ name: "Threat" })
+@Entity({ name: "User" })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("varchar")
+  @Required()
+  @Property()
+  @Column({ type: "varchar", unique: true })
   username: string;
 
+  @Required()
+  @Property()
   @Column("varchar")
+  @IsEmail()
   email: string;
 
+  @Required()
+  @Property()
   @Column("varchar")
   password: string;
+
+  @Property()
+  password_confirmation: string;
 
   @ManyToMany(type => Animal, animal => animal.users)
   @JoinTable({ name: "User_has_animals_favorites" })

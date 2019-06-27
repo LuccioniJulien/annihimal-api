@@ -6,20 +6,6 @@ import { Animal } from "./models/animal";
 import { existsSync, readFileSync } from 'fs';
 import * as  path from 'path';
 
-const jsonReader = filePath => {
-  // console.log(filePath)
-
-  if(!existsSync(filePath)) {
-    console.log("❌  File not found");
-  }
-  try {
-    const data = readFileSync(filePath, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    console.log('Error parsing JSON string:', error)
-  }
-}
-
 async function main(): Promise<void> {
 
   try {
@@ -109,6 +95,21 @@ const deleteAnimal = (connection: Connection) => {
     .from(Animal)
     .where("id = :id", { id: 1 })
     .execute();
+}
+
+
+// read json file
+const jsonReader = filePath => {
+  // console.log(filePath)
+  if(!existsSync(filePath)) {
+    console.log("❌  File not found");
+  }
+  try {
+    const data = readFileSync(filePath, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    console.log('Error parsing JSON string:', error)
+  }
 }
 
 /**

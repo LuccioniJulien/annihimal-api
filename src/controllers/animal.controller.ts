@@ -7,7 +7,6 @@ import {
   PathParams
 } from "@tsed/common";
 import { Animal } from "../models/animal";
-import IRepository from "../interfaces/IRepository";
 import Repository from "../repository/repository";
 import { Description, Returns } from "@tsed/swagger";
 import ErrorRequest from "../errors/ErrorRequest";
@@ -15,7 +14,7 @@ import ErrorRequest from "../errors/ErrorRequest";
 @Scope(ProviderScope.INSTANCE)
 @Controller("/animal")
 export class AnimalsController {
-  private _repo: IRepository;
+  private _repo: Repository;
 
   constructor(serviceRepo: Repository) {
     this._repo = serviceRepo;

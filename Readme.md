@@ -1,7 +1,31 @@
-# Awesome Project Build with TypeORM
+# Api rest typescript + typeorm
 
-Steps to run this project:
+## Prérequis
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+
+1. Nodejs
+
+
+## Instructions
+
+
+1. `npm i` pour installer les dépendances.
+2. `npm start` pour démarrer l'application.
+
+## Variables .env
+
+```
+    TYPEORM_CONNECTION=
+    TYPEORM_HOST=
+    TYPEORM_USERNAME=
+    TYPEORM_PASSWORD=
+    TYPEORM_DATABASE=
+    TYPEORM_PORT=
+    TYPEORM_SYNCHRONIZE=
+    TYPEORM_LOGGING=
+    TYPEORM_ENTITIES=
+```
+
+## Documentation API
+
+https://annihimal-api.herokuapp.com/api-docs

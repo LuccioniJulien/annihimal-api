@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Black Rhinoceros",
+        "img": "https://a-z-animals.com/media/animals/images/470x370/black_rhinoceros1.jpg",
+        "kingdom": "Animalia",
+        "phylum": "Chordata",
+        "class": "Mammalia",
+        "order": "Perissodactyla",
+        "family": "Rhinocerotidae",
+        "genus": "Diceros",
+        "scientific_name": "Diceros Bicornis",
+        "type": "Mammal",
+        "diet": "Herbivore",
+        "size_(l)": "3.3m - 3.6m (11ft - 12ft)",
+        "weight": "800kg - 1,400kg (1,800lbs - 3,100lbs)",
+        "top_speed": "42km/h (30mph)",
+        "lifespan": "45-50 years",
+        "lifestyle": "Solitary",
+        "conservation_status": "Critically Endangered",
+        "colour": "Brown, Grey, White",
+        "skin_type": "Leather",
+        "favourite_food": "Grass",
+        "habitat": "Tropical bushland, grassland and savannas",
+        "average_litter size": "1",
+        "main_prey": "Grass, Fruit, Berries, Leaves",
+        "predators": "Human, Wild cats",
+        "special_features": "Hard, thick skin and two large horns"
+    }
+]

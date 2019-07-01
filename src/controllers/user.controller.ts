@@ -89,10 +89,10 @@ export class UsersController {
     if (!(await checkHash(password, user.password)))
       throw new ErrorRequest("unauthorized", 401);
 
-    const { id, email: login } = user;
+    const { id, email: login, username } = user;
     const jwt = jwtSign({ id, email: login });
 
-    return { user, jwt };
+    return { user: { id, email: login, username }, jwt };
   }
 
   @Post("/favorite")
@@ -112,7 +112,8 @@ export class UsersController {
     if (!user || !animal) throw new ErrorRequest("Bad request", 400);
 
     const animals = await this._repo.users.getFavoriteAnimalsOfUser(userId);
-    if (animals.some(animal => animal.id === animalId)) return null;
+    if (animals.some(animal => animal.id === animalId))
+      return { favorite: { userId, animalId } };
 
     await this._repo.users.addFavoriteAnimal(userId, animalId);
     return { favorite: { userId, animalId } };

@@ -74,13 +74,16 @@ export class UsersController {
 
   @Post("/favorite")
   @Status(201)
-  @Description("Login")
+  @Description("add favorite")
   @Returns(400, { description: "Bad Request" })
   public async addFavorite(
     @Required() @BodyParams("userId") userId: number,
     @Required() @BodyParams("animalId") animalId: number,
     @Required() @HeaderParams("Authorization") bearer: string
   ): Promise<void> {
+    const { id } = verifToken(bearer);
+    if (id != userId) throw new ErrorRequest("unauthorized", 401);
+
     const user: User = await this._repo.users.get(userId);
     const animal: Animal = await this._repo.animals.get(animalId);
     if (!user || !animal) throw new ErrorRequest("Bad request", 400);

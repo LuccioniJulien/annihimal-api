@@ -28,11 +28,11 @@ export class UsersController {
     this._repo = serviceRepo;
   }
 
-  @Post("/subscribe")
-  @Status(201)
-  @Description("Subscribe a user")
+  @Get("/")
+  @Status(200)
+  @Description("v")
   @Returns(400, { description: "Bad Request" })
-  public async subscribe(
+  public async head(
     @Required() @BodyParams("users", User) user: User
   ): Promise<void> {
     const errors = await validate(user);
@@ -49,6 +49,29 @@ export class UsersController {
     user.password = await hash(user.password);
     this._repo.users.insert(user);
     return null;
+  }
+
+  @Post("/subscribe")
+  @Status(201)
+  @Description("Subscribe a user")
+  @Returns(400, { description: "Bad Request" })
+  public async subscribe(
+    @Required() @BodyParams("users", User) user: User
+  ): Promise<object> {
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      throw new ErrorRequest(errors.join(", "), 400);
+    }
+    if (user.password !== user.password_confirmation) {
+      throw new ErrorRequest(
+        "Password and password_confirmation should be the same",
+        400
+      );
+    }
+
+    user.password = await hash(user.password);
+    this._repo.users.insert(user);
+    return {};
   }
 
   @Post("/login")
@@ -80,7 +103,7 @@ export class UsersController {
     @Required() @BodyParams("userId") userId: number,
     @Required() @BodyParams("animalId") animalId: number,
     @Required() @HeaderParams("Authorization") bearer: string
-  ): Promise<void> {
+  ): Promise<object> {
     const { id } = verifToken(bearer);
     if (id != userId) throw new ErrorRequest("unauthorized", 401);
 
@@ -92,7 +115,7 @@ export class UsersController {
     if (animals.some(animal => animal.id === animalId)) return null;
 
     await this._repo.users.addFavoriteAnimal(userId, animalId);
-    return null;
+    return {};
   }
 
   @Get("/:id/favorite")

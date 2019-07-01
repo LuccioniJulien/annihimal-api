@@ -4,7 +4,8 @@ import {
   Status,
   Scope,
   ProviderScope,
-  PathParams
+  PathParams,
+  QueryParams
 } from "@tsed/common";
 import { Animal } from "../models/animal";
 import Repository from "../services/repository.service";
@@ -25,8 +26,11 @@ export class AnimalsController {
   @Description("Get list of animals")
   @Returns(404, { description: "Not found" })
   @Returns(200, { description: "Found" })
-  async getAll(): Promise<object> {
-    const animals: Array<Animal> = await this._repo.animals.getAll();
+  async getAll(
+    @QueryParams() skip: number = 0,
+    @QueryParams() limit: number = 15
+  ): Promise<object> {
+    const animals: Array<Animal> = await this._repo.animals.getAll(skip, limit);
     return { animals };
   }
 
@@ -46,7 +50,7 @@ export class AnimalsController {
   @Status(200)
   @Returns(400, { description: "Bad Request" })
   @Returns(200, { description: "Found" })
-  @Description("Get one animal and his details by id")
+  @Description("Get one animal by id whith his details")
   async getDetails(@PathParams("id") id: number): Promise<object> {
     const animal = await this._repo.animals.getDetailsOfAnimal(id);
     if (!animal) throw new ErrorRequest("Not found", 404);

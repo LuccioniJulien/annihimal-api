@@ -79,11 +79,8 @@ export class UsersController {
   public async addFavorite(
     @Required() @BodyParams("userId") userId: number,
     @Required() @BodyParams("animalId") animalId: number,
-    @HeaderParams("Authorization") bearer: string
+    @Required() @HeaderParams("Authorization") bearer: string
   ): Promise<void> {
-    const { id } = verifToken(bearer);
-    if (id != userId) throw new ErrorRequest("unauthorized", 401);
-
     const user: User = await this._repo.users.get(userId);
     const animal: Animal = await this._repo.animals.get(animalId);
     if (!user || !animal) throw new ErrorRequest("Bad request", 400);
@@ -101,7 +98,7 @@ export class UsersController {
   @Returns(400, { description: "Bad Request" })
   public async getFavorite(
     @PathParams("id") userId: number,
-    @HeaderParams("Authorization") bearer: string
+    @Required() @HeaderParams("Authorization") bearer: string
   ): Promise<object> {
     const { id } = verifToken(bearer);
     if (id != userId) throw new ErrorRequest("unauthorized", 401);

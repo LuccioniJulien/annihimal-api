@@ -1,7 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import { $log } from "ts-log-debug";
 import ErrorRequest from "../errors/ErrorRequest";
-import { stringify } from "querystring";
 
 export function jwtSign(payload) {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });

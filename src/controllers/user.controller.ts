@@ -47,8 +47,8 @@ export class UsersController {
     }
 
     user.password = await hash(user.password);
-    this._repo.users.insert(user);
-    return null;
+    const {} = this._repo.users.insert(user);
+    return;
   }
 
   @Post("/subscribe")
@@ -71,7 +71,7 @@ export class UsersController {
 
     user.password = await hash(user.password);
     this._repo.users.insert(user);
-    return {};
+    return user;
   }
 
   @Post("/login")
@@ -115,7 +115,7 @@ export class UsersController {
     if (animals.some(animal => animal.id === animalId)) return null;
 
     await this._repo.users.addFavoriteAnimal(userId, animalId);
-    return {};
+    return { favorite: { userId, animalId } };
   }
 
   @Get("/:id/favorite")

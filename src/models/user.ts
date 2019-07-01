@@ -12,6 +12,7 @@ import { IsEmail, Equals } from "class-validator";
 
 @Entity({ name: "User" })
 export class User {
+
   @PrimaryGeneratedColumn()
   id: number;
 

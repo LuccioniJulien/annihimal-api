@@ -28,35 +28,35 @@ export class UsersController {
     this._repo = serviceRepo;
   }
 
-  @Get("/")
-  @Status(200)
-  @Description("v")
-  @Returns(400, { description: "Bad Request" })
-  public async head(
-    @Required() @BodyParams("users", User) user: User
-  ): Promise<void> {
-    const errors = await validate(user);
-    if (errors.length > 0) {
-      throw new ErrorRequest(errors.join(", "), 400);
-    }
-    if (user.password !== user.password_confirmation) {
-      throw new ErrorRequest(
-        "Password and password_confirmation should be the same",
-        400
-      );
-    }
+  // @Get("/")
+  // @Status(200)
+  // @Description("v")
+  // @Returns(400, { description: "Bad Request" })
+  // public async head(
+  //   @Required() @BodyParams("users", User) user: User
+  // ): Promise<void> {
+  //   const errors = await validate(user);
+  //   if (errors.length > 0) {
+  //     throw new ErrorRequest(errors.join(", "), 400);
+  //   }
+  //   if (user.password !== user.password_confirmation) {
+  //     throw new ErrorRequest(
+  //       "Password and password_confirmation should be the same",
+  //       400
+  //     );
+  //   }
 
-    user.password = await hash(user.password);
-    const {} = this._repo.users.insert(user);
-    return;
-  }
+  //   user.password = await hash(user.password);
+  //   const {} = this._repo.users.insert(user);
+  //   return;
+  // }
 
   @Post("/subscribe")
   @Status(201)
   @Description("Subscribe a user")
   @Returns(400, { description: "Bad Request" })
   public async subscribe(
-    @Required() @BodyParams("users", User) user: User
+    @Required() @BodyParams(User) user: User
   ): Promise<object> {
     const errors = await validate(user);
     if (errors.length > 0) {
@@ -71,7 +71,8 @@ export class UsersController {
 
     user.password = await hash(user.password);
     this._repo.users.insert(user);
-    return user;
+    const { username, email } = user;
+    return { username, email };
   }
 
   @Post("/login")

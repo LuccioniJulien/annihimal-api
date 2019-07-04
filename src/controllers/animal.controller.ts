@@ -21,14 +21,13 @@ export class AnimalsController {
     this._repo = serviceRepo;
   }
 
-  @Get()
+  @Get("/")
   @Status(200)
   @Description("Get list of animals")
-  @Returns(404, { description: "Not found" })
-  @Returns(200, { description: "Found" })
+  @Returns(200, { description: "Ok" })
   async getAll(
-    @QueryParams() skip: number = 0,
-    @QueryParams() limit: number = 15
+    @QueryParams("skip") skip: number = 0,
+    @QueryParams("limit") limit: number = 15
   ): Promise<object> {
     const animals: Array<Animal> = await this._repo.animals.getAll(skip, limit);
     return { animals };

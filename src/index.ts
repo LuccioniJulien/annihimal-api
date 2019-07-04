@@ -9,6 +9,8 @@ import { Diet } from './models/diet';
 import { Class } from './models/class';
 import { Lifestyle } from './models/lifestyle';
 import { Group_Behavior } from './models/group_Behavior';
+import { Habitat } from './models/habitat';
+import { Threat } from './models/threat';
 
 // Read json file
 const jsonReader = filePath => {
@@ -48,14 +50,14 @@ async function main(): Promise<void> {
       ["average_litter size"]: litterSize,
       lifespan: lifespan,
       fun_fact: funFact,
-      habitat,
+      habitat: habitatNames,
       class: className,
       prey,
       diet: dietName,
       lifestyle: lifeStyle,
       group_behaviour: groupBehaviour,
       predator,
-      biggest_threat: biggestThreat
+      biggest_threat: biggestThreat,
     } = animal;
 
     try {
@@ -80,6 +82,8 @@ async function main(): Promise<void> {
         const behaviour: Group_Behavior = await getBehaviour(connection, currentGroupBehaviour);
         animal.group_Behavior = behaviour
       }
+      const habitats: Array<Habitat> = await getHabitats(connection, habitatNames);
+      const threats: Array<Threat> = await getThreats(connection, biggestThreat)
 
       animal.name = name
       animal.size = animal["size_(h)"] || animal["size_(l)"]
@@ -97,8 +101,23 @@ async function main(): Promise<void> {
       animal.class = category
       animal.lifestyle = lifestyle
 
+
       // ✅ - add animal
-      await insertAnimal(connection, animal);
+      const { identifiers } = await insertAnimal(connection, animal);
+      const idAnimal = identifiers[0]
+
+      for (const habitat of habitats) {
+        await insertAnimalHabitat(connection, { habitatId: habitat.id, animalId: idAnimal })
+      }
+      
+      for (const threat of threats) {
+        await insertAnimalThreat(connection, { threatId: threat.id, animalId: idAnimal })
+
+      }
+
+
+
+      console.log(identifiers)
     } catch (error) {
       console.log(error.message)
     }
@@ -115,6 +134,48 @@ main();
  * ============================================================================
  * helpers functions
  * */
+
+const getHabitats = async (connection: Connection, habitatNames: String): Promise<Array<Habitat>> => {
+  let habitats = habitatNames.split(" and ")
+  if (habitats.length >= 2) {
+    habitats = habitats[0].split(',').concat(habitats[1]);
+  }
+  const myHabitats: Array<Habitat> = habitats.map(habitatName => {
+    const h = new Habitat()
+    h.name = habitatName.trim();
+    return h;
+  })
+
+  const finalHabitats: Array<Habitat> = []
+
+  for (const ha of myHabitats) {
+    const tempHabit = await getHabitat(connection, ha)
+    finalHabitats.push(tempHabit)
+
+  }
+  return finalHabitats;
+}
+
+const getThreats = async (connection: Connection, threatName: String): Promise<Array<Threat>> => {
+  let threats = threatName.split(" and ")
+  if (threats.length >= 2) {
+    threats = threats[0].split(',').concat(threats[1]);
+  }
+  const myThreats: Array<Threat> = threats.map(threatName => {
+    const t = new Threat()
+    t.name = threatName.trim().toLowerCase();
+    return t;
+  })
+
+  const finalThreats: Array<Threat> = []
+
+  for (const threat of myThreats) {
+    const tempThreat = await getThreat(connection, threat)
+    finalThreats.push(tempThreat)
+
+  }
+  return finalThreats;
+}
 
 const getDiet = async (connection: Connection, diet: Diet): Promise<Diet> => {
 
@@ -192,6 +253,44 @@ const getBehaviour = async (connection: Connection, behaviour: Group_Behavior): 
   return maybeBehaviour
 }
 
+const getHabitat = async (connection: Connection, habitat: Habitat): Promise<Habitat> => {
+
+  let maybeHabitat: Habitat = await connection
+    .getRepository(Habitat)
+    .createQueryBuilder()
+    .where("Habitat.name = :name", { name: habitat.name })
+    .getOne()
+
+  if (!maybeHabitat) {
+    await insertHabitat(connection, habitat)
+    maybeHabitat = await connection
+      .getRepository(Habitat)
+      .createQueryBuilder()
+      .where("Habitat.name = :name", { name: habitat.name })
+      .getOne()
+  }
+  return maybeHabitat
+}
+
+const getThreat = async (connection: Connection, threat: Threat): Promise<Threat> => {
+
+  let maybeThreat: Threat = await connection
+    .getRepository(Threat)
+    .createQueryBuilder()
+    .where("Threat.name = :name", { name: threat.name })
+    .getOne()
+
+  if (!maybeThreat) {
+    await insertThreat(connection, threat)
+    maybeThreat = await connection
+      .getRepository(Threat)
+      .createQueryBuilder()
+      .where("Threat.name = :name", { name: threat.name })
+      .getOne()
+  }
+  return maybeThreat
+}
+
 const insertDiet = (connection: Connection, diet: Diet): Promise<InsertResult> =>
   connection
     .createQueryBuilder()
@@ -225,6 +324,42 @@ const insertBehaviour = (connection: Connection, behaviour: Group_Behavior): Pro
     .insert()
     .into(Group_Behavior)
     .values(behaviour)
+    .execute();
+};
+
+const insertHabitat = (connection: Connection, habitat: Habitat): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into(Habitat)
+    .values(habitat)
+    .execute();
+};
+
+const insertAnimalHabitat = (connection: Connection, animalHabitat: any): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into("Animal_has_habitats")
+    .values(animalHabitat)
+    .execute();
+};
+
+const insertThreat = (connection: Connection, threat: Threat): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into(Threat)
+    .values(threat)
+    .execute();
+};
+
+const insertAnimalThreat= (connection: Connection, animalThreat: any): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into("Animal_has_threaths")
+    .values(animalThreat)
     .execute();
 };
 

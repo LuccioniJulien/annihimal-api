@@ -5,51 +5,25 @@ import {
   Scope,
   ProviderScope,
   PathParams,
-  QueryParams
 } from "@tsed/common";
 import { Animal } from "../models/animal";
 import Repository from "../services/repository.service";
 import { Description, Returns } from "@tsed/swagger";
 import ErrorRequest from "../errors/ErrorRequest";
+import BaseController from "./base.controller";
 
 @Scope(ProviderScope.INSTANCE)
 @Controller("/animals")
-export class AnimalsController {
-  private _repo: Repository;
-
+export class AnimalsController extends BaseController<Animal> {
   constructor(serviceRepo: Repository) {
-    this._repo = serviceRepo;
-  }
-
-  @Get("/")
-  @Status(200)
-  @Description("Get list of animals")
-  @Returns(200, { description: "Ok" })
-  async getAll(
-    @QueryParams("skip") skip: number = 0,
-    @QueryParams("limit") limit: number = 15
-  ): Promise<object> {
-    const animals: Array<Animal> = await this._repo.animals.getAll(skip, limit);
-    return { animals };
-  }
-
-  @Get("/:id")
-  @Status(200)
-  @Returns(404, { description: "Not found" })
-  @Returns(400, { description: "Bad Request" })
-  @Returns(200, { description: "Found" })
-  @Description("Get one animal by id")
-  async get(@PathParams("id") id: number): Promise<object> {
-    const animal: Animal = await this._repo.animals.get(id);
-    if (!animal) throw new ErrorRequest("Not found", 404);
-    return { animal };
+    super(serviceRepo, Animal);
   }
 
   @Get("/details/:id")
   @Status(200)
   @Returns(400, { description: "Bad Request" })
   @Returns(200, { description: "Found" })
-  @Description("Get one animal by id whith his details")
+  @Description("Get one animal by id with his details")
   async getDetails(@PathParams("id") id: number): Promise<object> {
     const animal = await this._repo.animals.getDetailsOfAnimal(id);
     if (!animal) throw new ErrorRequest("Not found", 404);

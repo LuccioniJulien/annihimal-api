@@ -24,7 +24,6 @@ export class GlobalErrorHandlerMiddleware implements IMiddlewareError {
     @Next() next: ExpressNext
   ): any {
     if (response.headersSent) {
-      console.log("========> middleware");
       return next(error);
     }
 

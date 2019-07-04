@@ -4,7 +4,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   JoinTable,
-  ManyToMany
+  ManyToMany,
+  Unique
 } from "typeorm";
 import { Animal } from "./animal";
 import { Property, Required } from "@tsed/common";
@@ -12,7 +13,6 @@ import { IsEmail, Equals } from "class-validator";
 
 @Entity({ name: "User" })
 export class User {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,7 +23,7 @@ export class User {
 
   @Required()
   @Property()
-  @Column("varchar")
+  @Column({ type: "varchar", unique: true })
   @IsEmail()
   email: string;
 

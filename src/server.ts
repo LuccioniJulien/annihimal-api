@@ -8,6 +8,7 @@ import * as cookieParser from "cookie-parser";
 import * as bodyParser from "body-parser";
 import * as compress from "compression";
 import * as methodOverride from "method-override";
+import { GlobalErrorHandlerMiddleware } from "./middlewares/globalError.middleware";
 const rootDir = __dirname;
 
 @ServerSettings({
@@ -41,5 +42,9 @@ export class Server extends ServerLoader {
       );
 
     return null;
+  }
+
+  $afterRoutesInit() {
+    this.use(GlobalErrorHandlerMiddleware);
   }
 }

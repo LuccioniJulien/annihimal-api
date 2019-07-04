@@ -1,11 +1,14 @@
 import 'reflect-metadata';
 import { Server } from './server';
-import { createConnection, Connection, getRepository } from 'typeorm';
+import { createConnection, Connection, getRepository, InsertResult } from 'typeorm';
 import { Animal } from './models/animal';
 
 import { existsSync, readFileSync } from 'fs';
 import * as path from 'path';
 import { Diet } from './models/diet';
+import { Class } from './models/class';
+import { Lifestyle } from './models/lifestyle';
+import { Group_Behavior } from './models/group_Behavior';
 
 // Read json file
 const jsonReader = filePath => {
@@ -22,100 +25,87 @@ const jsonReader = filePath => {
 };
 
 async function main(): Promise<void> {
-  try {
-    // On se connecte à la db
-    const connection = await createConnection();
-    await connection.dropDatabase();
-    await connection.synchronize(true);
 
-    // cwd = current working directory
-    const animals = jsonReader(path.join(process.cwd(), 'data.json'));
+  // On se connecte à la db
+  const connection = await createConnection();
+  await connection.dropDatabase();
+  await connection.synchronize(true);
 
-    // Retourne la liste (tableau) des animaux avec uniquement les champs qui nous intéressent
-    const animalCleanup = animals.map(animal => {
-      const {
-        name,
-        scientific_name: scientificName,
-        colour: color,
-        skin_type: skinType,
-        status,
-        img,
-        size,
-        weight,
-        gestation,
-        litter_size: litterSize,
-        lifespan: lifespan,
-        fun_fact: funFact,
-        habitat,
-        class: category,
-        prey,
-        diet,
-        group_behaviour: groupBehaviour,
-        predator,
-        biggest_threat: biggestThreat
-      } = animal;
+  // cwd = current working directory
+  const animals = jsonReader(path.join(process.cwd(), 'data.json'));
 
-      return {
-        name,
-        scientificName,
-        color,
-        skinType,
-        status,
-        img,
-        size,
-        weight,
-        gestation,
-        litterSize,
-        lifespan,
-        funFact,
-        habitat,
-        category,
-        prey,
-        diet,
-        groupBehaviour,
-        predator,
-        biggestThreat
-      };
-    });
+  const insert = async animal => {
+    const {
+      name,
+      scientific_name: scientificName,
+      colour: color,
+      skin_type: skinType,
+      conservation_status: status,
+      img,
+      size,
+      weight,
+      gestation_period: gestation,
+      ["average_litter size"]: litterSize,
+      lifespan: lifespan,
+      fun_fact: funFact,
+      habitat,
+      class: className,
+      prey,
+      diet: dietName,
+      lifestyle: lifeStyle,
+      group_behaviour: groupBehaviour,
+      predator,
+      biggest_threat: biggestThreat
+    } = animal;
 
-    // Retourne la liste (tableau) des régimes alimentaires (diet)
-    const diets = animals.map(animal => {
-      const { diet: name } = animal;
-      return {
-        name
-      };
-    });
+    try {
+      const animal = new Animal()
 
-    // ✅ - add all diet in db
-    await insertDiets(connection, diets);
+      const currentDiet = new Diet()
+      currentDiet.name = dietName
 
-    // Récupère un régime alimentaire (diet) depuis la db
-    // const plop = await getRepository(Diet)
-    //   .createQueryBuilder('diet')
-    //   .where('diet.id = :id OR diet.name = :name', { id: 1, name: 'Herbivore' })
-    //   .getOne();
+      const currentCategory = new Class()
+      currentCategory.name = className
 
-    // const herbivore = await getRepository(Diet).findOne({
-    //   id: 1,
-    //   name: 'Herbivore'
-    // });
+      const currentLifestyle = new Lifestyle()
+      currentLifestyle.name = lifeStyle
 
-    // const allDiets = await getRepository(Diet)
-    //   .createQueryBuilder('diet')
-    //   .getMany();
+      const currentGroupBehaviour = new Group_Behavior()
+      currentGroupBehaviour.name = groupBehaviour
 
-    // console.log('🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤');
-    // console.log(typeof allDiets);
-    // console.log(allDiets);
-    // console.log('🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤🥤');
+      const diet: Diet = await getDiet(connection, currentDiet);
+      const category: Class = await getCategory(connection, currentCategory);
+      const lifestyle: Lifestyle = await getLifestyle(connection, currentLifestyle);
+      if (groupBehaviour) {
+        const behaviour: Group_Behavior = await getBehaviour(connection, currentGroupBehaviour);
+        animal.group_Behavior = behaviour
+      }
 
-    // ❌ - add | update | delete an animal
-    // await insertAnimals(connection, animalCleanup);
-    // await insertAnimal(connection);
-    // await updateAnimal(connection)
-    // await deleteAnimal(connection)
-  } catch (error) {
-    console.log(error.message);
+      animal.name = name
+      animal.size = animal["size_(h)"] || animal["size_(l)"]
+      animal.scientific_name = scientificName
+      animal.color = color
+      animal.skin_type = skinType
+      animal.status = status
+      animal.img = img
+      animal.weight = weight
+      animal.gestation = gestation
+      animal.litter_size = litterSize
+      animal.lifespan = lifespan
+      animal.fun_fact = funFact
+      animal.diet = diet
+      animal.class = category
+      animal.lifestyle = lifestyle
+
+      // ✅ - add animal
+      await insertAnimal(connection, animal);
+    } catch (error) {
+      console.log(error.message)
+    }
+  };
+
+  for (const animal of animals) {
+    await insert(animal)
   }
 }
 
@@ -126,37 +116,120 @@ main();
  * helpers functions
  * */
 
-const insertDiets = (connection: Connection, diets: [Diet]) => {
-  let dietNames = [];
-  // Si le tableau dietNames ne contient pas dietName, alors on l'ajoute
-  diets.map(diet => {
-    if (!dietNames.includes(diet.name)) {
-      dietNames.push(diet.name);
-    }
-  });
+const getDiet = async (connection: Connection, diet: Diet): Promise<Diet> => {
 
-  // Convertis le tableau dietNames en Objet et lui ajoute une propriété name correspondant au régime alimentaire
-  const allDiets = dietNames.map(dietName => {
-    return { name: dietName };
-  });
+  let maybeDiet: Diet = await connection
+    .getRepository(Diet)
+    .createQueryBuilder()
+    .where("Diet.name = :name", { name: diet.name })
+    .getOne()
 
-  //
+  if (!maybeDiet) {
+    await insertDiet(connection, diet)
+    maybeDiet = await connection
+      .getRepository(Diet)
+      .createQueryBuilder()
+      .where("Diet.name = :name", { name: diet.name })
+      .getOne()
+  }
+  return maybeDiet
+}
+
+const getCategory = async (connection: Connection, category: Class): Promise<Class> => {
+
+  let maybeClass: Class = await connection
+    .getRepository(Class)
+    .createQueryBuilder()
+    .where("Class.name = :name", { name: category.name })
+    .getOne()
+
+  if (!maybeClass) {
+    await insertCategory(connection, category)
+    maybeClass = await connection
+      .getRepository(Class)
+      .createQueryBuilder()
+      .where("Class.name = :name", { name: category.name })
+      .getOne()
+  }
+  return maybeClass
+}
+
+const getLifestyle = async (connection: Connection, lifestyle: Lifestyle): Promise<Lifestyle> => {
+
+  let maybeLifestyle: Class = await connection
+    .getRepository(Class)
+    .createQueryBuilder()
+    .where("Class.name = :name", { name: lifestyle.name })
+    .getOne()
+
+  if (!maybeLifestyle) {
+    await insertLifestyle(connection, lifestyle)
+    maybeLifestyle = await connection
+      .getRepository(Lifestyle)
+      .createQueryBuilder()
+      .where("Lifestyle.name = :name", { name: lifestyle.name })
+      .getOne()
+  }
+  return maybeLifestyle
+}
+
+const getBehaviour = async (connection: Connection, behaviour: Group_Behavior): Promise<Group_Behavior> => {
+
+  let maybeBehaviour: Group_Behavior = await connection
+    .getRepository(Group_Behavior)
+    .createQueryBuilder()
+    .where("Group_Behavior.name = :name", { name: behaviour.name })
+    .getOne()
+
+  if (!maybeBehaviour) {
+    await insertBehaviour(connection, behaviour)
+    maybeBehaviour = await connection
+      .getRepository(Group_Behavior)
+      .createQueryBuilder()
+      .where("Group_Behavior.name = :name", { name: behaviour.name })
+      .getOne()
+  }
+  return maybeBehaviour
+}
+
+const insertDiet = (connection: Connection, diet: Diet): Promise<InsertResult> =>
   connection
     .createQueryBuilder()
     .insert()
     .into(Diet)
-    .values(allDiets)
+    .values(diet)
+    .execute();
+;
+
+const insertCategory = (connection: Connection, category: Class): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into(Class)
+    .values(category)
     .execute();
 };
 
-const insertAnimals = (connection: Connection, animals: [Animal]) => {
-  animals.map(animal => {
-    insertAnimal(connection, animal);
-  });
+const insertLifestyle = (connection: Connection, lifestyle: Lifestyle): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into(Lifestyle)
+    .values(lifestyle)
+    .execute();
+};
+
+const insertBehaviour = (connection: Connection, behaviour: Group_Behavior): Promise<InsertResult> => {
+  return connection
+    .createQueryBuilder()
+    .insert()
+    .into(Group_Behavior)
+    .values(behaviour)
+    .execute();
 };
 
 const insertAnimal = (connection: Connection, animal: Animal) => {
-  connection
+  return connection
     .createQueryBuilder()
     .insert()
     .into(Animal)

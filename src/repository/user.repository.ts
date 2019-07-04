@@ -15,6 +15,13 @@ export default class UserRepo extends Base<User> {
       .getOne();
   }
 
+  public getByUsername(username: string): Promise<User> {
+    return this.entities
+      .createQueryBuilder()
+      .where("User.username = :username", { username })
+      .getOne();
+  }
+
   public async getFavoriteAnimalsOfUser(id: number): Promise<Array<Animal>> {
     const user: User = await this.entities
       .createQueryBuilder()

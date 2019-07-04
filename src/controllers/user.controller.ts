@@ -59,15 +59,22 @@ export class UsersController {
     @Required() @BodyParams(User) user: User
   ): Promise<object> {
     const errors = await validate(user);
+
     if (errors.length > 0) {
       throw new ErrorRequest(errors.join(", "), 400);
     }
-    if (user.password !== user.password_confirmation) {
+
+    if (await this._repo.users.getByEmail(user.email))
+      throw new ErrorRequest("email already taken", 400);
+
+    if (await this._repo.users.getByUsername(user.username))
+      throw new ErrorRequest("username already taken", 400);
+
+    if (user.password !== user.password_confirmation)
       throw new ErrorRequest(
-        "Password and password_confirmation should be the same",
+        "Password and password_confirmation must be the same",
         400
       );
-    }
 
     user.password = await hash(user.password);
     this._repo.users.insert(user);

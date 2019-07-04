@@ -4,8 +4,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   JoinTable,
-  ManyToMany,
-  Unique
+  ManyToMany
 } from "typeorm";
 import { Animal } from "./animal";
 import { Property, Required } from "@tsed/common";

@@ -22,11 +22,7 @@ export default class AnimalRepo extends Base<Animal> {
         .limit(1)
         .getOne();
 
-      if (animals.some(ani => ani.id == randomAnimal.id)) {
-        index--;
-      } else {
-        animals.push(randomAnimal);
-      }
+      animals.push(randomAnimal);
     }
 
     return animals;

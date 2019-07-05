@@ -36,9 +36,9 @@ export class AnimalsController extends BaseController<Animal> {
   @Returns(400, { description: "Bad Request" })
   @Returns(200, { description: "Found" })
   @Description("Get random animals")
-  async getRandom(@QueryParams("skip") number: number = 0): Promise<object> {
+  async getRandom(@QueryParams("nbRequested") nbRequested: number = 0): Promise<object> {
     const animals: Array<Animal> = await this._repo.animals.getRandomAnimals(
-      number
+      nbRequested
     );
     if (!animals) throw new ErrorRequest("Not found", 404);
     return { animals };

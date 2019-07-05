@@ -1,5 +1,5 @@
 import { Base } from "./base.repository";
-import { Diet } from "../models/Diet";
+import { Diet } from "../models/diet";
 
 export default class DietRepo extends Base<Diet> {
   constructor() {

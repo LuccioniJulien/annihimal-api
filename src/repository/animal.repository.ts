@@ -14,13 +14,10 @@ export default class AnimalRepo extends Base<Animal> {
 
     const animals: Array<Animal> = [];
 
-    for (let index = 1; index <= nbRequested; index++) {
+    for (let index = 0; index < nbRequested; index++) {
       const randomInt: number = getRandom({ min: 1, max: totalAnimal });
-      const randomAnimal: Animal = await this.entities
-        .createQueryBuilder()
-        .skip(randomInt)
-        .limit(1)
-        .getOne();
+      console.log(randomInt);
+      const randomAnimal: Animal = await this.entities.findOne(randomInt);
 
       animals.push(randomAnimal);
     }

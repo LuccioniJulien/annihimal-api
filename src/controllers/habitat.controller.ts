@@ -2,7 +2,6 @@ import {
   Controller,
   Scope,
   ProviderScope,
-  BodyParams
 } from "@tsed/common";
 import Repository from "../services/repository.service";
 import BaseController from "./base.controller";

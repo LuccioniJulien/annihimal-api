@@ -5,5 +5,4 @@ export default class HabitatRepo extends Base<Habitat> {
   constructor() {
     super(Habitat);
   }
-
 }

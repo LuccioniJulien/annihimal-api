@@ -26,7 +26,7 @@ export default abstract class BaseController<T> {
   @Returns(200, { description: "OK" })
   async getAll(
     @QueryParams("skip") skip: number = 0,
-    @QueryParams("limit") limit: number = 15
+    @QueryParams("limit") limit: number = 10
   ): Promise<object> {
     console.log(this._name);
     const list: Array<T> = await this._repo[this._name + "s"].getAll(
@@ -48,12 +48,12 @@ export default abstract class BaseController<T> {
     return { [this._name]: entity };
   }
 
-  @Post("/")
-  @Status(201)
-  @Description("Subscribe a user")
-  @Returns(400, { description: "Bad Request" })
-  public async subscribe(@Required() @BodyParams() entity: T): Promise<object> {
-    this._repo[this._name + "s"].insert(entity);
-    return { [this._name]: entity };
-  }
+  // @Post("/")
+  // @Status(201)
+  // @Description("Subscribe a user")
+  // @Returns(400, { description: "Bad Request" })
+  // public async subscribe(@Required() @BodyParams() entity: T): Promise<object> {
+  //   this._repo[this._name + "s"].insert(entity);
+  //   return { [this._name]: entity };
+  // }
 }

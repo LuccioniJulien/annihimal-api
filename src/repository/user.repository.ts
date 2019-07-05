@@ -1,6 +1,6 @@
 import { Base } from "./base.repository";
 import { User } from "../models/user";
-import { InsertResult } from "typeorm";
+import { InsertResult, DeleteResult, getConnection } from "typeorm";
 import { Animal } from "../models/animal";
 
 export default class UserRepo extends Base<User> {
@@ -41,5 +41,16 @@ export default class UserRepo extends Base<User> {
       .into("User_has_animals_favorites")
       .values({ userId, animalId })
       .execute();
+  }
+
+  public async removeFavoriteAnimal(
+    userId: number,
+    animalId: number
+  ): Promise<void> {
+    return getConnection()
+      .createQueryBuilder()
+      .relation(User, "animals")
+      .of(animalId)
+      .remove(userId);
   }
 }

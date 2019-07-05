@@ -8,7 +8,8 @@ import {
   PathParams,
   Required,
   Get,
-  HeaderParams
+  HeaderParams,
+  Delete
 } from "@tsed/common";
 import Repository from "../services/repository.service";
 import { Description, Returns } from "@tsed/swagger";
@@ -102,6 +103,25 @@ export class UsersController {
 
     await this._repo.users.addFavoriteAnimal(userId, animalId);
     return { favorite: { userId, animalId } };
+  }
+
+  @Delete("/favorite")
+  @Status(204)
+  @Description("add favorite")
+  @Returns(400, { description: "Bad Request" })
+  public async removeFavorite(
+    @Required() @BodyParams("userId") userId: number,
+    @Required() @BodyParams("animalId") animalId: number,
+    @Required() @HeaderParams("Authorization") bearer: string
+  ): Promise<void> {
+    const { id } = verifToken(bearer);
+    if (id != userId) throw new ErrorRequest("unauthorized", 401);
+
+    const user: User = await this._repo.users.get(userId);
+    const animal: Animal = await this._repo.animals.get(animalId);
+    if (!user || !animal) throw new ErrorRequest("Bad request", 400);
+
+    await this._repo.users.removeFavoriteAnimal(userId, animalId);
   }
 
   @Get("/:id/favorite")

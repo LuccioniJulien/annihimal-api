@@ -3,10 +3,7 @@ import {
   Get,
   Status,
   QueryParams,
-  PathParams,
-  Required,
-  Post,
-  BodyParams
+  PathParams
 } from "@tsed/common";
 import { Description, Returns } from "@tsed/swagger";
 import { getString } from "../utils/genericUtils";

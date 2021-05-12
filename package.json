@@ -4,7 +4,7 @@
   "description": "Awesome project developed with TypeORM. REST api for annihimalAPp",
   "dependencies": {
     "@tsed/common": "^5.20.1",
-    "@tsed/core": "^5.20.1",
+    "@tsed/core": "^5.65.7",
     "@tsed/di": "^5.20.1",
     "@tsed/swagger": "^5.20.1",
     "@types/bcrypt": "^3.0.0",
